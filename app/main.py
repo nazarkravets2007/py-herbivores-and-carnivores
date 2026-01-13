@@ -4,11 +4,14 @@ class Animal:
     def __init__(
         self,
         name: str,
+        health: int = 100,
     ) -> None:
         self.name = name
-        self.health = 100
+        self.health = health
         self.hidden = False
-        Animal.alive.append(self)
+
+        if self.health > 0:
+            Animal.alive.append(self)
 
     def _die(self) -> None:
         if self in Animal.alive:
@@ -25,6 +28,23 @@ class Animal:
 class Herbivore(Animal):
     def hide(self) -> None:
         self.hidden = not self.hidden
+
+
+class Carnivore(Animal):
+    def bite(
+        self,
+        animal: Animal,
+    ) -> None:
+        if not isinstance(animal, Herbivore):
+            return
+
+        if animal.hidden:
+            return
+
+        animal.health -= 50
+        if animal.health <= 0:
+            animal.health = 0
+            animal._die()
 
 
 class Carnivore(Animal):
